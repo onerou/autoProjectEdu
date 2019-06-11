@@ -1,0 +1,25 @@
+{
+  "name": "autoProjectEdu",
+  "version": "1.0.0",
+  "description": "自动化企业大学\r ## 需要配置映射环境\r npm config set puppeteer_download_host https://npm.taobao.org/mirrors\r npm i\r node app.js",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "puppeteer": "^1.17.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onerou/autoProjectEdu.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/onerou/autoProjectEdu/issues"
+  },
+  "homepage": "https://github.com/onerou/autoProjectEdu#readme"
+}
