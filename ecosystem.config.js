@@ -1,8 +1,7 @@
 module.exports = {
-  apps : [{
-    name: 'autoProjectEduLYH',
+  apps: [{
+    name: 'autoProjectEdu',
     script: 'app.js',
-
     // Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/
     args: 'one two',
     instances: 1,
@@ -17,10 +16,10 @@ module.exports = {
     }
   }],
 
-  deploy : {
-    production : {
-      user : 'node',
-      'post-deploy' : 'npm install && pm2 reload ecosystem.config.js --env production'
+  deploy: {
+    production: {
+      user: 'node',
+      'post-deploy': 'npm install && pm2 reload ecosystem.config.js --env production'
     }
   }
 };
