@@ -27,9 +27,11 @@ const goFn = async () => {
 	// })
 };
 const goList = async () => {
-	console.log('TCL: goList -> global.page', global.page);
-	if (global.page > 11) return;
 	global.page++;
+	if (global.page > 11) {
+		console.log('所有文档已看完');
+		return;
+	}
 	await global.list.goto(
 		`http://edu.piesat.cn/kng/knowledgecatalogsearch.htm?t=${pageUrl[listType]}&ps=5&pi=` + global.page
 	);
@@ -38,8 +40,8 @@ const goList = async () => {
 const doLogin = async (login, config) => {
 	// console.log("TCL: doLogin -> config", config)
 	const loginForm = await login.$('#dvUserNameLoginPanel');
-	await loginForm.$eval('#txtUserName2', (userInput) => (userInput.value = '用户名')); // 用户名
-	await loginForm.$eval('#txtPassword2', (passInput) => (passInput.value = '密码')); // 密码
+	await loginForm.$eval('#txtUserName2', (userInput) => (userInput.value = 'hecheng')); // 用户名
+	await loginForm.$eval('#txtPassword2', (passInput) => (passInput.value = 'Hc199406170037')); // 密码
 	await loginForm.$eval('#btnLogin2', (loginBtn) => loginBtn.click());
 	setTimeout(async () => {
 		global.list = await global.browser.newPage();
