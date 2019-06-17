@@ -15,10 +15,10 @@ const goFn = async () => {
 			height: 930
 		},
 		// devtools: true,
-		// headless: false
-		headless: true
+		headless: false
+		// headless: true
 	});
-	global.page = 0;
+	global.page = 9;
 	const login = await browser.newPage();
 	await login.goto('http://edu.piesat.cn/login.htm');
 	// await doLogin(login, config);
@@ -27,10 +27,12 @@ const goFn = async () => {
 	// })
 };
 const goList = async () => {
+	console.log('TCL: goList -> global.page', global.page);
+	if (global.page > 11) return;
 	global.page++;
 	await global.list.goto(
 		`http://edu.piesat.cn/kng/knowledgecatalogsearch.htm?t=${pageUrl[listType]}&sf=UploadDate&s=dc&ps=50&pi=` +
-		global.page
+			global.page
 	);
 	await doList(list);
 };
@@ -43,58 +45,58 @@ const doLogin = async (login, config) => {
 	setTimeout(async () => {
 		global.list = await global.browser.newPage();
 		await goList();
+		await login.close();
 	}, 2000);
 };
 const doList = async (list) => {
 	const listDiv = await list.$('.el-kng-img-list');
 	if (!listDiv) return;
 	urlList = await list.evaluate(() => {
-		let list = [...document.querySelectorAll('.el-placehold-body')];
+		let list = [ ...document.querySelectorAll('.el-placehold-body') ];
 		return list.map((v) => {
 			return 'http://edu.piesat.cn' + v.getAttribute('onclick').split("'")[1];
 		});
 	});
 	// await getDocumentPage(urlList);
 	await eval(`get${listType}Page(urlList)`);
+	await list.close();
 };
 const getDocumentPage = async (list) => {
 	try {
-		t && clearInterval(t);
+		t && clearTimeout(t);
 		if (list.length == 0) {
 			goList();
+			return;
 		}
 		let datePage = await global.browser.newPage();
 		let url = list.shift();
 		if (!url || typeof url != 'string') {
-			// console.log('TCL: getDocumentPage -> url', url);
+			console.log('TCL: getDocumentPage -> url', url);
+			console.log('TCL: getDocumentPage -> list', list);
 			await datePage.close();
 			await getDocumentPage(list);
 			return;
 		}
 		await datePage.goto(url);
-		t = await setInterval(async () => {
-			let flag = await datePage.evaluate(() => {
-				return $('#ScheduleText').text() == '100%';
-			});
-			if (flag) {
-				await datePage.close();
-				// await setTimeout(async () => {
-				clearInterval(t);
-				getDocumentPage(list);
-				// },);
-				return;
-			} else {
-				datePage.evaluate(() => {
+		let flag = await datePage.evaluate(() => {
+			return $('#ScheduleText').text() == '100%';
+		});
+		if (flag) {
+			await datePage.close();
+			getDocumentPage(list);
+			return;
+		} else {
+			await datePage.evaluate(() => {
+				setInterval(async () => {
 					submitStudy();
 					SyncSchedule();
-				});
-			}
-		}, 1000);
-		// await setTimeout(async () => {
-		// 	await datePage.close();
-		// 	clearInterval(t);
-		// 	await getDocumentPage(list);
-		// }, 30000);
+				}, 1000);
+			});
+			t = await setTimeout(async () => {
+				await datePage.close();
+				await getDocumentPage(list);
+			}, 10000);
+		}
 	} catch (err) {
 		console.log(err);
 	}
@@ -130,7 +132,7 @@ const getVideoPage = async (list) => {
 					setInterval(() => {
 						let time = $('.jw-text-duration').text().split(':');
 						let videoTime = 0;
-						let timeInterval = [1, 60, 3600];
+						let timeInterval = [ 1, 60, 3600 ];
 						for (let index = time.length - 1; index <= 0; index--) {
 							videoTime += time[index] * timeInterval[index];
 						}
