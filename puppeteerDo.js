@@ -4,6 +4,7 @@ const puppeteer = require('puppeteer');
 var urlList = [],
 	t,
 	listType = 'Document',
+	pagenumber = 11,
 	pageUrl = {
 		Document: 'DocumentKnowledge',
 		Video: 'VideoKnowledge'
@@ -15,10 +16,10 @@ const goFn = async () => {
 			height: 930
 		},
 		// devtools: true,
-		headless: false
-		// headless: true
+		// headless: false
+		headless: true
 	});
-	global.page = 9;
+	global.page = 4;
 	const login = await browser.newPage();
 	await login.goto('http://edu.piesat.cn/login.htm');
 	// await doLogin(login, config);
@@ -28,20 +29,24 @@ const goFn = async () => {
 };
 const goList = async () => {
 	global.page++;
-	if (global.page > 11) {
+	console.log('TCL: goList -> global.page', global.page);
+	console.log('TCL: goList -> pagenumber', pagenumber);
+	if (global.page >= pagenumber) {
 		console.log('所有文档已看完');
 		return;
 	}
 	await global.list.goto(
-		`http://edu.piesat.cn/kng/knowledgecatalogsearch.htm?t=${pageUrl[listType]}&ps=5&pi=` + global.page
-	);
+		`http://edu.piesat.cn/kng/knowledgecatalogsearch.htm?t=${pageUrl[listType]}&ps=50&pi=` + global.page
+	,{
+    timeout: 60000 //timeout here is 60 seconds
+});
 	await doList(list);
 };
 const doLogin = async (login, config) => {
 	// console.log("TCL: doLogin -> config", config)
 	const loginForm = await login.$('#dvUserNameLoginPanel');
-	await loginForm.$eval('#txtUserName2', (userInput) => (userInput.value = 'hecheng')); // 用户名
-	await loginForm.$eval('#txtPassword2', (passInput) => (passInput.value = 'Hc199406170037')); // 密码
+	await loginForm.$eval('#txtUserName2', (userInput) => (userInput.value = '用户名')); // 用户名
+	await loginForm.$eval('#txtPassword2', (passInput) => (passInput.value = '密码')); // 密码
 	await loginForm.$eval('#btnLogin2', (loginBtn) => loginBtn.click());
 	setTimeout(async () => {
 		global.list = await global.browser.newPage();
@@ -52,14 +57,19 @@ const doLogin = async (login, config) => {
 const doList = async (list) => {
 	const listDiv = await list.$('.el-kng-img-list');
 	if (!listDiv) return;
+	pagenumber = await list.evaluate(() => {
+		let list = [ ...document.querySelectorAll('.pagenumber') ];
+		return list[list.length - 1].innerText;
+	});
 	urlList = await list.evaluate(() => {
 		let list = [ ...document.querySelectorAll('.el-placehold-body') ];
 		return list.map((v) => {
 			return 'http://edu.piesat.cn' + v.getAttribute('onclick').split("'")[1];
 		});
 	});
-	// await getDocumentPage(urlList);
-	await eval(`get${listType}Page(urlList)`);
+	// console.log('TCL: doList -> urlList', urlList);
+	await getDocumentPage(urlList);
+	// await eval(`get${listType}Page(urlList)`);
 	// await list.close();
 };
 const getDocumentPage = async (list) => {
@@ -78,7 +88,9 @@ const getDocumentPage = async (list) => {
 			await getDocumentPage(list);
 			return;
 		}
-		await datePage.goto(url);
+		await datePage.goto(url,{
+    timeout: 60000 //timeout here is 60 seconds
+});
 		let flag = await datePage.evaluate(() => {
 			return $('#ScheduleText').text() == '100%';
 		});
@@ -116,7 +128,9 @@ const getVideoPage = async (list) => {
 			return;
 		}
 		let datePage = await global.browser.newPage();
-		await datePage.goto(url);
+		await datePage.goto(url,{
+    timeout: 60000 //timeout here is 60 seconds
+});
 		t = setInterval(async () => {
 			let flag = await datePage.evaluate(() => {
 				return $('#ScheduleText').text() == '100%';
