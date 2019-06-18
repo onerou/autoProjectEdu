@@ -19,7 +19,7 @@ const goFn = async () => {
 		// headless: false
 		headless: true
 	});
-	global.page = 4;
+	global.page = 6;
 	const login = await browser.newPage();
 	await login.goto('http://edu.piesat.cn/login.htm');
 	// await doLogin(login, config);
@@ -29,8 +29,8 @@ const goFn = async () => {
 };
 const goList = async () => {
 	global.page++;
-	console.log('TCL: goList -> global.page', global.page);
-	console.log('TCL: goList -> pagenumber', pagenumber);
+	console.log('当前页', global.page);
+	console.log('总页码', pagenumber);
 	if (global.page >= pagenumber) {
 		console.log('所有文档已看完');
 		return;
