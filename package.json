@@ -5,6 +5,8 @@
   "main": "app.js",
   "dependencies": {
     "express": "^4.17.1",
+    "node-notifier": "^5.4.0",
+    "ora": "^3.4.0",
     "puppeteer": "^1.17.0"
   },
   "devDependencies": {},
