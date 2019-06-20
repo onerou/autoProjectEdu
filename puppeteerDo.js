@@ -31,6 +31,8 @@ const goFn = async () => {
 		headless: true
 	});
 	global.page = 0;
+	spinner.text = `正在登陆用户`;
+	spinner.start();
 	const login = await browser.newPage();
 	await login.goto('http://edu.piesat.cn/login.htm');
 	// await doLogin(login, config);
@@ -43,7 +45,7 @@ const goList = async () => {
 	if (global.page > pagenumber) {
 		spinner.stopAndPersist({
 			symbol: '√',
-			text: '所有文档已看完',
+			text: `所有文档已看完,共${global.page}页,共${number}篇文档`,
 		})
 		notifierFn({
 			title:'企业大学阅读程序',
@@ -51,6 +53,7 @@ const goList = async () => {
 		})
 		return;
 	}
+	spinner.stop();	
 	spinner.text = `正在跳转第${global.page}页`;
 	spinner.start();	
 	await global.list.goto(
@@ -63,8 +66,8 @@ const goList = async () => {
 const doLogin = async (login, config) => {
 	// console.log("TCL: doLogin -> config", config)
 	const loginForm = await login.$('#dvUserNameLoginPanel');
-	await loginForm.$eval('#txtUserName2', (userInput) => (userInput.value = '用户名')); // 用户名
-	await loginForm.$eval('#txtPassword2', (passInput) => (passInput.value = '密码')); // 密码
+	await loginForm.$eval('#txtUserName2', (userInput) => (userInput.value = 'zhoubin')); // 用户名
+	await loginForm.$eval('#txtPassword2', (passInput) => (passInput.value = 'bin100411')); // 密码
 	await loginForm.$eval('#btnLogin2', (loginBtn) => loginBtn.click());
 	setTimeout(async () => {
 		global.list = await global.browser.newPage();
