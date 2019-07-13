@@ -20,9 +20,9 @@ const goFn = async () => {
 			width: 1400,
 			height: 930
 		},
-		devtools: true,
-		headless: false
-		// headless: true
+		// devtools: true,
+		// headless: false
+		headless: true
 	})
 	global.page = 0
 	spinner.text = `正在登陆用户`
@@ -60,8 +60,8 @@ const goList = async () => {
 }
 const doLogin = async (login, config) => {
 	const loginForm = await login.$('#dvUserNameLoginPanel')
-	await loginForm.$eval('#txtUserName2', (userInput) => (userInput.value = '用户名')) // 用户名
-	await loginForm.$eval('#txtPassword2', (passInput) => (passInput.value = '密码')) // 密码
+	await loginForm.$eval('#txtUserName2', (userInput) => (userInput.value = 'hecheng')) // 用户名
+	await loginForm.$eval('#txtPassword2', (passInput) => (passInput.value = 'Hc199406170037')) // 密码
 	await loginForm.$eval('#btnLogin2', (loginBtn) => loginBtn.click())
 	setTimeout(async () => {
 		global.list = await global.browser.newPage()
