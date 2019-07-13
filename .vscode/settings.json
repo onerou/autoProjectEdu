@@ -1,0 +1,10 @@
+{
+  "eslint.options": {
+    "configFile": ".eslintrc.js"
+  },
+  "vetur.format.defaultFormatter.html": "prettyhtml",
+  "eslint.validate": ["javascript", "vue"],
+  "prettier.semi": false,
+  "eslint.autoFixOnSave": true,
+  "editor.formatOnSave": true
+}
