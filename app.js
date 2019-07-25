@@ -4,6 +4,6 @@ const CourseKnowledgeDo = require('./CourseKnowledgeDo')
 const app = express()
 app.listen(6666, async () => {
 	console.log('Example app listening on port 6666!')
-	// puppeteerDo()
-	CourseKnowledgeDo()
+	puppeteerDo()
+	// CourseKnowledgeDo()
 })
