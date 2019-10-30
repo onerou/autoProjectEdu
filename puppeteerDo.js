@@ -7,7 +7,7 @@ const path = require('path')
 let number = 0
 var urlList = [],
 	t,
-	listType = 'Video',
+	listType = 'Document',
 	pagenumber = 11,
 	pageUrl = {
 		Document: 'DocumentKnowledge',
@@ -58,8 +58,8 @@ const goList = async () => {
 }
 const doLogin = async (login, config) => {
 	const loginForm = await login.$('#dvUserNameLoginPanel')
-	await loginForm.$eval('#txtUserName2', (userInput) => (userInput.value = 'lidan')) // 用户名
-	await loginForm.$eval('#txtPassword2', (passInput) => (passInput.value = '123456')) // 密码
+	await loginForm.$eval('#txtUserName2', (userInput) => (userInput.value = '用户名')) // 用户名
+	await loginForm.$eval('#txtPassword2', (passInput) => (passInput.value = '密码')) // 密码
 	await loginForm.$eval('#btnLogin2', (loginBtn) => loginBtn.click())
 	setTimeout(async () => {
 		global.list = await global.browser.newPage()
